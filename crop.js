@@ -13,7 +13,7 @@ document.getElementById("file").addEventListener("change", (event)=> {
 		}).then((response)=>{
 			return response.text();
 		}).then((text)=>{
-			console.log(text);
+			document.getElementsByTagName("body")[0].innerHTML=text;
 		})
 	});
 	//.then((url)=>{
