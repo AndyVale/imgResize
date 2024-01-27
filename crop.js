@@ -1,7 +1,46 @@
 console.clear();
 
 
-// crop the source image at various aspect ratios
+window.addEventListener("load", renderImg("prova.webp",1/1));
+
+function renderImg(path, aspectRatio){
+	let inputImage = new Image();//same as document.createElement("img");
+	inputImage.src = path;
+	console.log(inputImage);
+	inputImage.onload = () =>{
+		const inputWidth = inputImage.naturalWidth;
+		const inputHeight = inputImage.naturalHeight;
+		console.log(inputWidth, inputHeight);
+		// get the aspect ratio of the input image
+		const inputImageAspectRatio = inputWidth / inputHeight;
+
+		// if it's bigger than our target aspect ratio
+		let outputWidth = inputWidth;
+		let outputHeight = inputHeight;
+		if (inputImageAspectRatio > aspectRatio) {//devo aumentare la larghezza->spazio ai lati orizzontali
+			outputHeight = (1/aspectRatio)*inputWidth;
+		} else if (inputImageAspectRatio < aspectRatio) {//devo aumentare l'altezza->spazio ai lati verticali
+			outputWidth = aspectRatio*inputHeight;
+		}
+
+		// calculate the position to draw the image at
+		const outputX = (1*outputWidth - 1*inputWidth) * .5;
+		const outputY = (1*outputHeight - 1*inputHeight) * .5;
+
+		// create a canvas that will present the output image
+		const outputImage = document.createElement('canvas');
+		//outputImage.id=path+"canvas";
+		// set it to the same size as the image
+		outputImage.width = outputWidth;
+		outputImage.height = outputHeight;
+		
+		// draw our image at position 0, 0 on the canvas
+		const ctx = outputImage.getContext('2d');
+		ctx.drawImage(inputImage, outputX, outputY);
+		outputImage.style="background-color: white; border: 1px solid black; width: 100%;";
+		document.getElementById("container").appendChild(outputImage);
+	}
+}
 
 document.getElementById("file").addEventListener("change", (event)=> {
 	console.log(event.target.files[0]);
@@ -82,7 +121,5 @@ function crop(url, aspectRatio) {
 
 		// start loading our image
 		inputImage.src = url;
-		
 	});
-	
 };
